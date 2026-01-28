@@ -10,10 +10,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/johannesherold/claude-code-tabs"
+    "url": "https://github.com/joflywave/claude-code-tabs"
   },
   "bugs": {
-    "url": "https://github.com/johannesherold/claude-code-tabs/issues"
+    "url": "https://github.com/joflywave/claude-code-tabs/issues"
   },
   "icon": "icon.png",
   "galleryBanner": {
