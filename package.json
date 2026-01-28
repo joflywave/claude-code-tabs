@@ -1,0 +1,122 @@
+{
+  "name": "claude-code-tabs",
+  "displayName": "Claude Code Tabs",
+  "description": "Open Claude Code as editor tabs with session history. One-click access via robot icon.",
+  "version": "2.2.0",
+  "publisher": "johannesherold",
+  "author": {
+    "name": "Johannes Herold"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/johannesherold/claude-code-tabs"
+  },
+  "bugs": {
+    "url": "https://github.com/johannesherold/claude-code-tabs/issues"
+  },
+  "icon": "icon.png",
+  "galleryBanner": {
+    "color": "#1a1a2e",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "claude",
+    "anthropic",
+    "ai",
+    "assistant",
+    "terminal",
+    "claude code"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "claude-launcher.smartOpen",
+        "title": "Claude: Open",
+        "icon": "$(hubot)"
+      },
+      {
+        "command": "claude-launcher.open",
+        "title": "Claude: New Session",
+        "icon": "$(add)"
+      },
+      {
+        "command": "claude-launcher.continue",
+        "title": "Claude: Continue Last Session",
+        "icon": "$(history)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "claude-launcher.smartOpen",
+          "group": "navigation@1",
+          "when": "true"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "claude-launcher.smartOpen",
+          "group": "claude@1"
+        },
+        {
+          "command": "claude-launcher.open",
+          "group": "claude@2"
+        },
+        {
+          "command": "claude-launcher.continue",
+          "group": "claude@3"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "claude-launcher.smartOpen",
+          "when": "true"
+        },
+        {
+          "command": "claude-launcher.open",
+          "when": "true"
+        },
+        {
+          "command": "claude-launcher.continue",
+          "when": "true"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "claude-launcher.smartOpen",
+        "key": "ctrl+shift+c",
+        "mac": "ctrl+shift+c",
+        "when": "!terminalFocus"
+      },
+      {
+        "command": "claude-launcher.continue",
+        "key": "ctrl+shift+r",
+        "mac": "ctrl+shift+r",
+        "when": "!terminalFocus"
+      }
+    ],
+    "configuration": {
+      "title": "Claude Code Launcher",
+      "properties": {
+        "claude-launcher.singleInstance": {
+          "type": "boolean",
+          "default": false,
+          "description": "When enabled, opening Claude will focus an existing Claude tab instead of opening a new one"
+        }
+      }
+    }
+  }
+}
