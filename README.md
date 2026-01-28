@@ -7,23 +7,28 @@ Open [Claude Code](https://claude.ai/code) as editor tabs in VS Code/Cursor with
 - **One-Click Access** - Robot icon in editor title bar
 - **Session Management** - Resume recent sessions from QuickPick menu
 - **Smart Tab Naming** - Resumed sessions show their summary as tab name
-- **Keyboard Shortcuts** - `Ctrl+Shift+C` to open, `Ctrl+Shift+R` to continue
+- **Keyboard Shortcuts** - `Cmd+Alt+C` to open, `Cmd+Alt+R` to continue (Mac)
 
 ## Usage
 
 ### Quick Open (Recommended)
-Click the robot icon in the top-right corner of the editor or press `Ctrl+Shift+C`:
+Click the robot icon in the top-right corner of the editor or press `Cmd+Alt+C` (Mac) / `Ctrl+Alt+C` (Windows/Linux):
 
 - **New Session** - Start a fresh Claude Code session
 - **Recent Sessions** - Resume any of your last 5 sessions
 
 ### Commands
 
-| Command | Shortcut | Description |
-|---------|----------|-------------|
-| Claude: Open | `Ctrl+Shift+C` | Opens QuickPick with New + Recent sessions |
-| Claude: New Session | - | Start a new session directly |
-| Claude: Continue Last | `Ctrl+Shift+R` | Resume the most recent session |
+| Command | Mac | Windows/Linux | Description |
+|---------|-----|---------------|-------------|
+| Claude: Open | `Cmd+Alt+C` | `Ctrl+Alt+C` | Opens QuickPick with New + Recent sessions |
+| Claude: New Session | - | - | Start a new session directly |
+| Claude: Continue Last | `Cmd+Alt+R` | `Ctrl+Alt+R` | Resume the most recent session |
+
+### Customize Shortcuts
+1. Open Keyboard Shortcuts (`Cmd+K Cmd+S`)
+2. Search for "Claude"
+3. Click on the shortcut to change it
 
 ### Settings
 

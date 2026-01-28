@@ -2,7 +2,7 @@
   "name": "claude-code-tabs",
   "displayName": "Claude Code Tabs",
   "description": "Open Claude Code as editor tabs with session history. One-click access via robot icon.",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "publisher": "johannesherold",
   "author": {
     "name": "Johannes Herold"
@@ -97,14 +97,14 @@
     "keybindings": [
       {
         "command": "claude-launcher.smartOpen",
-        "key": "ctrl+shift+c",
-        "mac": "ctrl+shift+c",
+        "key": "ctrl+alt+c",
+        "mac": "cmd+alt+c",
         "when": "!terminalFocus"
       },
       {
         "command": "claude-launcher.continue",
-        "key": "ctrl+shift+r",
-        "mac": "ctrl+shift+r",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r",
         "when": "!terminalFocus"
       }
     ],

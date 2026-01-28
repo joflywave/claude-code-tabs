@@ -1,6 +1,11 @@
 # Changelog
 
-## [2.2.0] - 2025-01-28
+## [2.3.0] - 2026-01-28
+### Changed
+- Keyboard shortcuts changed to `Cmd+Alt+C` / `Cmd+Alt+R` (Mac) to avoid conflicts
+- Added customization instructions to README
+
+## [2.2.0] - 2026-01-28
 ### Added
 - Smart tab naming: resumed sessions show their summary as tab name
 - Marketplace-ready packaging
