@@ -2,7 +2,7 @@
   "name": "claude-code-tabs",
   "displayName": "Claude Code Tabs",
   "description": "Open Claude Code as editor tabs with session history. One-click access via robot icon.",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "publisher": "johannesherold",
   "author": {
     "name": "Johannes Herold"

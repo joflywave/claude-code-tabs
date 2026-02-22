@@ -1,54 +1,54 @@
 # Claude Code Tabs
 
-Open [Claude Code](https://claude.ai/code) as editor tabs in VS Code/Cursor with session history.
+Run [Claude Code](https://docs.anthropic.com/en/docs/claude-code) as editor tabs instead of the bottom terminal panel.
+
+Claude Code normally opens in a separate terminal or the integrated terminal at the bottom of your editor. This extension opens it as **editor tabs** — side by side with your code, just like any other file.
 
 ## Features
 
-- **One-Click Access** - Robot icon in editor title bar
-- **Session Management** - Resume recent sessions from QuickPick menu
-- **Smart Tab Naming** - Resumed sessions show their summary as tab name
-- **Keyboard Shortcuts** - `Cmd+Alt+C` to open, `Cmd+Alt+R` to continue (Mac)
+- **Editor Tabs** — Claude Code opens as a tab in the editor area, not the terminal panel. Split, drag, and arrange it like any other editor tab.
+- **Session History** — Resume recent sessions from a QuickPick menu. Reads directly from `~/.claude/projects/` so it always matches your actual session history.
+- **Smart Tab Naming** — New sessions get numbered names (`Claude Code`, `Claude Code 2`, ...). Resumed sessions show their summary as the tab name.
+- **Multi-Project Workspaces** — In multi-root workspaces, each project gets its own "New Session" entry and sessions are grouped by project.
+- **Single Instance Mode** — Optional setting to reuse an existing Claude tab instead of opening a new one.
 
 ## Usage
 
-### Quick Open (Recommended)
-Click the robot icon in the top-right corner of the editor or press `Cmd+Alt+C` (Mac) / `Ctrl+Alt+C` (Windows/Linux):
+Click the 🤖 icon in the editor title bar or press `Cmd+Alt+C` (Mac) / `Ctrl+Alt+C` (Windows/Linux).
 
-- **New Session** - Start a fresh Claude Code session
-- **Recent Sessions** - Resume any of your last 5 sessions
+A QuickPick menu appears with:
+
+- **New Session** — Start a fresh Claude Code session (one per workspace folder)
+- **Recent Sessions** — Resume any of your last 10 sessions, sorted by most recent
 
 ### Commands
 
-| Command | Mac | Windows/Linux | Description |
-|---------|-----|---------------|-------------|
-| Claude: Open | `Cmd+Alt+C` | `Ctrl+Alt+C` | Opens QuickPick with New + Recent sessions |
-| Claude: New Session | - | - | Start a new session directly |
-| Claude: Continue Last | `Cmd+Alt+R` | `Ctrl+Alt+R` | Resume the most recent session |
-
-### Customize Shortcuts
-1. Open Keyboard Shortcuts (`Cmd+K Cmd+S`)
-2. Search for "Claude"
-3. Click on the shortcut to change it
+| Command               | Shortcut (Mac) | Shortcut (Win/Linux) | Description                          |
+| --------------------- | -------------- | -------------------- | ------------------------------------ |
+| Claude: Open          | `Cmd+Alt+C`    | `Ctrl+Alt+C`         | QuickPick with new + recent sessions |
+| Claude: New Session   | —              | —                    | Start a new session directly         |
+| Claude: Continue Last | `Cmd+Alt+R`    | `Ctrl+Alt+R`         | Resume the most recent session       |
 
 ### Settings
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `claude-launcher.singleInstance` | `false` | Focus existing Claude tab instead of opening new one |
+| Setting                          | Default | Description                                            |
+| -------------------------------- | ------- | ------------------------------------------------------ |
+| `claude-launcher.singleInstance` | `false` | Focus existing Claude tab instead of opening a new one |
 
 ## Requirements
 
-- [Claude Code CLI](https://claude.ai/code) must be installed and available in PATH
+- [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) installed and available in PATH
+- VS Code 1.74+ or Cursor
 
-## Installation
+## Install
 
-### From VSIX
-1. Download the `.vsix` file
-2. In VS Code: `Extensions` → `...` → `Install from VSIX...`
-3. Select the downloaded file
+**Marketplace** — Search for "Claude Code Tabs" in the Extensions view.
 
-### From Marketplace
-Search for "Claude Code Tabs" in the Extensions view.
+**Manual** — Download the `.vsix` from [Releases](https://github.com/johrld/claude-code-tabs/releases), then `Extensions → ... → Install from VSIX...`
+
+## Contributing
+
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## License
 

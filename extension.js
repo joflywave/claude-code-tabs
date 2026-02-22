@@ -59,8 +59,9 @@ function focusExistingClaudeTerminal() {
  * Create a new Claude Code terminal
  * @param {string} command - The command to run
  * @param {string|null} sessionTitle - Optional session title for resumed sessions
+ * @param {string|null} cwd - Working directory for the terminal
  */
-function createClaudeTerminal(command = 'claude', sessionTitle = null) {
+function createClaudeTerminal(command = 'claude', sessionTitle = null, cwd = null) {
   const config = vscode.workspace.getConfiguration('claude-launcher');
   const singleInstance = config.get('singleInstance', false);
 
@@ -82,10 +83,17 @@ function createClaudeTerminal(command = 'claude', sessionTitle = null) {
     tabName = getTabName(tabNumber);
   }
 
-  const terminal = vscode.window.createTerminal({
+  const terminalOptions = {
     name: tabName,
     location: vscode.TerminalLocation.Editor
-  });
+  };
+
+  // Set working directory if provided
+  if (cwd) {
+    terminalOptions.cwd = cwd;
+  }
+
+  const terminal = vscode.window.createTerminal(terminalOptions);
 
   terminal.show();
 
@@ -150,11 +158,11 @@ async function getSessionSummary(filePath) {
 }
 
 /**
- * Get recent sessions from index + new files (same as /resume)
+ * Get recent sessions from index + new files for a specific workspace folder
+ * @param {string} workspaceFolder - The workspace folder path
  */
-async function getRecentSessions() {
+async function getRecentSessionsForFolder(workspaceFolder) {
   try {
-    const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
     if (!workspaceFolder) return [];
 
     const projectDir = workspaceFolder.replace(/\//g, '-');
@@ -178,27 +186,29 @@ async function getRecentSessions() {
     } catch {}
 
     // Check for new session files not in index
-    const files = await fs.readdir(sessionsPath);
-    const sessionFiles = files.filter(f => f.endsWith('.jsonl'));
+    try {
+      const files = await fs.readdir(sessionsPath);
+      const sessionFiles = files.filter(f => f.endsWith('.jsonl'));
 
-    for (const f of sessionFiles) {
-      const sessionId = f.replace('.jsonl', '');
-      const filePath = path.join(sessionsPath, f);
-      const stat = await fs.stat(filePath);
+      for (const f of sessionFiles) {
+        const sessionId = f.replace('.jsonl', '');
+        const filePath = path.join(sessionsPath, f);
+        const stat = await fs.stat(filePath);
 
-      // If file is newer than indexed version or not indexed
-      const indexed = indexedSessions.get(sessionId);
-      if (!indexed || stat.mtime > indexed.updated_at) {
-        const summary = await getSessionSummary(filePath);
-        if (summary) {
-          indexedSessions.set(sessionId, {
-            id: sessionId,
-            title: summary,
-            updated_at: stat.mtime
-          });
+        // If file is newer than indexed version or not indexed
+        const indexed = indexedSessions.get(sessionId);
+        if (!indexed || stat.mtime > indexed.updated_at) {
+          const summary = await getSessionSummary(filePath);
+          if (summary) {
+            indexedSessions.set(sessionId, {
+              id: sessionId,
+              title: summary,
+              updated_at: stat.mtime
+            });
+          }
         }
       }
-    }
+    } catch {}
 
     // Sort by date and return top 5
     return [...indexedSessions.values()]
@@ -209,24 +219,71 @@ async function getRecentSessions() {
   }
 }
 
+/**
+ * Get all workspace folders
+ */
+function getWorkspaceFolders() {
+  const folders = vscode.workspace.workspaceFolders || [];
+  return folders.map(f => ({
+    name: f.name,
+    path: f.uri.fsPath
+  }));
+}
+
 function activate(context) {
-  // Command: Smart Open (Icon click) - shows QuickPick with New Session + Recent Sessions
+  // Command: Smart Open (Icon click) - shows QuickPick with New Session per project + Recent Sessions
   const smartOpenCommand = vscode.commands.registerCommand('claude-launcher.smartOpen', async () => {
-    const sessions = await getRecentSessions();
+    const workspaceFolders = getWorkspaceFolders();
+    const items = [];
 
-    const items = [
-      { label: '$(add) New Session', description: 'Start a fresh Claude Code session', action: 'new' }
-    ];
+    // Add "New Session" for each workspace folder
+    if (workspaceFolders.length === 0) {
+      items.push({
+        label: '$(add) New Session',
+        description: 'Start a fresh Claude Code session',
+        action: 'new',
+        cwd: null
+      });
+    } else {
+      for (const folder of workspaceFolders) {
+        items.push({
+          label: `$(add) New Session (${folder.name})`,
+          description: folder.path,
+          action: 'new',
+          cwd: folder.path
+        });
+      }
+    }
 
-    if (sessions.length > 0) {
-      items.push({ label: '', kind: vscode.QuickPickItemKind.Separator });
+    // Gather sessions from all workspace folders
+    const allSessions = [];
+    for (const folder of workspaceFolders) {
+      const sessions = await getRecentSessionsForFolder(folder.path);
       sessions.forEach(s => {
+        allSessions.push({
+          ...s,
+          projectName: folder.name,
+          projectPath: folder.path
+        });
+      });
+    }
+
+    // Sort all sessions by date and take top 10
+    allSessions.sort((a, b) => b.updated_at - a.updated_at);
+    const recentSessions = allSessions.slice(0, 10);
+
+    if (recentSessions.length > 0) {
+      items.push({ label: '', kind: vscode.QuickPickItemKind.Separator });
+      recentSessions.forEach(s => {
         const label = s.title || `Session ${s.id.substring(0, 8)}`;
+        const projectSuffix = workspaceFolders.length > 1 ? ` (${s.projectName})` : '';
         items.push({
           label: `$(history) ${label}`,
-          description: formatTimeAgo(s.updated_at),
+          description: `${formatTimeAgo(s.updated_at)}${projectSuffix}`,
           action: 'resume',
-          id: s.id
+          id: s.id,
+          cwd: s.projectPath,
+          sessionTitle: label
         });
       });
     }
@@ -238,11 +295,9 @@ function activate(context) {
     if (!selected) return;
 
     if (selected.action === 'new') {
-      createClaudeTerminal('claude');
+      createClaudeTerminal('claude', null, selected.cwd);
     } else {
-      // Extract session title (remove icon prefix)
-      const sessionTitle = selected.label.replace('$(history) ', '');
-      createClaudeTerminal(`claude --resume ${selected.id}`, sessionTitle);
+      createClaudeTerminal(`claude --resume ${selected.id}`, selected.sessionTitle, selected.cwd);
     }
   });
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.4.0] - 2026-01-28
+### Added
+- Multi-project support: "New Session (project-name)" for each workspace folder
+- Sessions are now started in the correct project directory
+- Session history shows project name when multiple projects are open
+
 ## [2.3.0] - 2026-01-28
 ### Changed
 - Keyboard shortcuts changed to `Cmd+Alt+C` / `Cmd+Alt+R` (Mac) to avoid conflicts
